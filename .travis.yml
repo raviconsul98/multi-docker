@@ -17,7 +17,7 @@ after_success:
     # Log into the docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push the images to docker hub
-    - docekr push raviconsul/multi-client
+    - docker push raviconsul/multi-client
     - docker push raviconsul/multi-nginx
     - docker push raviconsul/multi-server
     - docker push raviconsul/multi-worker
