@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t raviconsul/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run raviconsul/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t raviconsul/multi-client ./client
+    - docker build -t raviconsul/multi-nginx ./nginx
+    - docker build -t raviconsul/multi-server ./server
+    - docker build -t raviconsul/multi-worker ./worker
+    # Log into the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push the images to docker hub
+    - docekr push raviconsul/multi-client
+    - docker push raviconsul/multi-nginx
+    - docker push raviconsul/multi-server
+    - docker push raviconsul/multi-worker
